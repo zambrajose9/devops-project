@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: regression-model-service
+spec:
+  selector:
+    app: regression-model
+  ports:
+    - protocol: TCP
+      port: 80          # El puerto accesible públicamente
+      targetPort: 8000   # El puerto donde tu aplicación escucha dentro del contenedor
+  type: LoadBalancer
