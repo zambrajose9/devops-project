@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Clonar el código desde el repositorio
+    # Actualizar a la versión más reciente de `actions/checkout`
     - name: Check out the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     # Loguearse en Docker Hub
     - name: Log in to Docker Hub
@@ -20,8 +20,8 @@ jobs:
 
     # Construir la imagen de Docker desde la carpeta `docker/`
     - name: Build Docker image
-      run: docker build -t zambrajose9/proyecto-devops:latest -f docker/Dockerfile .
+      run: docker build -t your_dockerhub_username/proyecto-devops:latest -f docker/Dockerfile .
 
     # Subir la imagen de Docker a Docker Hub
     - name: Push Docker image to Docker Hub
-      run: docker push zambrajose9/proyecto-devops:latest
+      run: docker push your_dockerhub_username/proyecto-devops:latest
