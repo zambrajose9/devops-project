@@ -1,6 +1,5 @@
 name: CD Pipeline
 
-# Especifica que la pipeline se ejecuta al hacer push a la rama main
 on:
   push:
     branches:
@@ -19,10 +18,10 @@ jobs:
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-    # Construir la imagen de Docker
+    # Construir la imagen de Docker desde la carpeta `docker/`
     - name: Build Docker image
-      run: docker build -t your_dockerhub_username/proyecto-devops:latest .
+      run: docker build -t zambrajose9/proyecto-devops:latest -f docker/Dockerfile .
 
     # Subir la imagen de Docker a Docker Hub
     - name: Push Docker image to Docker Hub
-      run: docker push your_dockerhub_username/proyecto-devops:latest
+      run: docker push zambrajose9/proyecto-devops:latest
