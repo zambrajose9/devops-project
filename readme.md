@@ -138,3 +138,7 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 3. Haz **commit** de tus cambios (`git commit -m 'Agrego nueva feature'`).
 4. Haz **push** a la branch (`git push origin feature/nueva-feature`).
 5. Abre un **Pull Request**.
+
+## Licencia
+
+Este proyecto está licenciado bajo los términos de la Licencia MIT. Para más detalles, consulta el archivo [LICENSE](./LICENSE).
