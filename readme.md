@@ -1,9 +1,3 @@
-Para proporcionar instrucciones claras en el archivo **README** para cualquier persona que clona tu repositorio, es importante cubrir desde los pasos de instalación de dependencias hasta cómo ejecutar correctamente la aplicación y los contenedores.
-
-Aquí te dejo una guía completa que puedes incluir en tu **README.md**:
-
----
-
 # Proyecto DevOps con Docker y FastAPI
 
 Este proyecto incluye una aplicación **FastAPI** que realiza predicciones utilizando un modelo entrenado y un contenedor **Postgres** para gestionar la base de datos. Todo está orquestado con **Docker Compose**.
@@ -144,9 +138,3 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 3. Haz **commit** de tus cambios (`git commit -m 'Agrego nueva feature'`).
 4. Haz **push** a la branch (`git push origin feature/nueva-feature`).
 5. Abre un **Pull Request**.
-
----
-
-Con estas instrucciones, cualquier persona que clone el repositorio debería poder configurar su entorno, ejecutar la aplicación y probar la API, ya sea localmente o usando Docker.
-
-¿Te gustaría agregar algo más o necesitas ajustar alguna sección?
