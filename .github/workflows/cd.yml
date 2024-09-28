@@ -20,8 +20,8 @@ jobs:
 
     # Construir la imagen de Docker desde la carpeta `docker/`
     - name: Build Docker image
-      run: docker build -t your_dockerhub_username/proyecto-devops:latest -f docker/Dockerfile .
+      run: docker build -t zambrajose9/proyecto-devops:latest -f docker/Dockerfile .
 
     # Subir la imagen de Docker a Docker Hub
     - name: Push Docker image to Docker Hub
-      run: docker push your_dockerhub_username/proyecto-devops:latest
+      run: docker push zambrajose9/proyecto-devops:latest
