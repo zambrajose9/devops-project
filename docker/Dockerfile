@@ -1,20 +1,14 @@
-# Utiliza una imagen base de Python
-FROM python:3.10
-
-# Establece el directorio de trabajo dentro del contenedor
+# Stage 1: Build
+FROM python:3.10 AS builder
 WORKDIR /app
-
-# Copia el archivo de dependencias
 COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-# Instala las dependencias
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copia el resto del código de la aplicación
+# Stage 2: Runtime
+FROM python:3.10-slim
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
 COPY . .
-
-# Expone el puerto 8000 para acceder a la aplicación
 EXPOSE 8000
-
-# Comando para ejecutar la aplicación con Uvicorn
 CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]

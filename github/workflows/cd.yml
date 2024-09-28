@@ -1,0 +1,31 @@
+name: CD Pipeline
+
+# Triggers del pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Clonar el código del repositorio
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    # Loguearse en Docker Hub
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    # Construir la imagen Docker
+    - name: Build the Docker image
+      run: docker build -t your_dockerhub_username/proyecto-devops:latest .
+
+    # Pushear la imagen a Docker Hub
+    - name: Push the Docker image to Docker Hub
+      run: docker push your_dockerhub_username/proyecto-devops:latest
