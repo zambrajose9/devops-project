@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: fastapi-mongo
     ports:
-      - "5001:5000"
+      - "8000:8000"
     environment:
       - ENV=production
       - MONGO_INITDB_ROOT_USERNAME=user
