@@ -1,14 +1,12 @@
-# Stage 1: Build
-FROM python:3.10 AS builder
+# Etapa de compilación
+FROM python:3.10-slim AS builder
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Stage 2: Runtime
+# Etapa final
 FROM python:3.10-slim
 WORKDIR /app
-COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-COPY . .
-EXPOSE 8000
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY . /app
+CMD ["python", "src/app.py"]
