@@ -4,12 +4,16 @@ from pymongo import MongoClient
 from bson import ObjectId
 import joblib
 import os
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Cargar el modelo entrenado
 model = joblib.load('src/model.pkl')
 
 # Crear la aplicación FastAPI
 app = FastAPI()
+
+# Instrumentar la aplicación antes de que comience
+Instrumentator().instrument(app).expose(app)
 
 # Conexión a MongoDB
 MONGO_URI = f"mongodb://{os.getenv('MONGO_INITDB_ROOT_USERNAME')}:{os.getenv('MONGO_INITDB_ROOT_PASSWORD')}@mongo:27017/"
