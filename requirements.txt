@@ -6,3 +6,4 @@ joblib
 prometheus-fastapi-instrumentator
 pymongo
 pytest
+httpx
