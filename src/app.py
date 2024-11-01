@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pymongo import MongoClient
 import joblib
 import os
@@ -33,7 +33,7 @@ predictions_75_plus = Counter('predictions_75_plus_total', 'Total de prediccione
 
 # Definir el esquema de entrada
 class SizeInput(BaseModel):
-    size: float
+    size: float = Field(..., gt=0) 
 
 # Definir el modelo para la respuesta de la predicción
 class PredictionResponse(BaseModel):

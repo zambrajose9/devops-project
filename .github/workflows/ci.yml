@@ -39,7 +39,12 @@ jobs:
       run: |
         sleep 10  # Esperar 10 segundos para que la API esté lista
         curl -f http://localhost:8000/docs || exit 1  # Verifica si la API está disponible
-
+    
+    # Ejecutar las pruebas unitarias con Pytest
+    - name: Run unit tests
+      run: |
+        docker-compose exec app python -m pytest
+        
     # Apagar los servicios al final de la prueba
     - name: Tear down Docker Compose
       run: docker-compose down
