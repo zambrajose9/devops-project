@@ -1,34 +1,41 @@
-```markdown
 # Proyecto de Predicción de Precios de Casas
 
 Este proyecto implementa una API para predecir el precio de una casa en función de su tamaño utilizando un modelo de regresión. La API está construida con FastAPI, y el proyecto incluye un pipeline de CI/CD, monitoreo con Prometheus y visualización de métricas en Grafana. La persistencia de datos se maneja con MongoDB.
 
 ## Estructura del Proyecto
 
-```
-devops/
-├── .github/
-│   └── workflows/
-│       ├── ci.yml                # Pipeline de Integración Continua
-│       └── cd.yml                # Pipeline de Despliegue Continuo
-├── data/
-│   └── housing_data.csv          # Datos de ejemplo
-├── docker/
-│   └── Dockerfile                # Archivo Docker para construir la imagen de la app
-├── prometheus/
-│   └── prometheus.yml            # Configuración para Prometheus
-├── src/
-│   ├── __pycache__/
-│   ├── app.py                    # Archivo principal de la aplicación FastAPI
-│   ├── model.pkl                 # Modelo de regresión entrenado
-│   └── model.py                  # Código para entrenar el modelo
-├── tests/
-│   └── test_main.py              # Pruebas unitarias de la API
-├── .gitignore                    # Archivos a ignorar por Git
-├── docker-compose.yml            # Archivo de configuración para Docker Compose
-├── LICENSE                       # Licencia del proyecto
-├── README_dev.md                 # Documentación adicional para desarrollo
-└── requirements.txt              # Dependencias del proyecto
+
+# 🏠 Proyecto de Predicción de Precios de Casas
+
+Este proyecto implementa una API para predecir el precio de una casa en función de su tamaño utilizando un modelo de regresión. La API está construida con FastAPI, y el proyecto incluye un pipeline de CI/CD, monitoreo con Prometheus y visualización de métricas en Grafana. La persistencia de datos se maneja con MongoDB.
+
+## 📂 Estructura del Proyecto
+
+```plaintext
+📁 devops/
+├── 📁 .github/
+│   └── 📁 workflows/
+│       ├── 📝 ci.yml               # Pipeline de Integración Continua
+│       └── 📝 cd.yml               # Pipeline de Despliegue Continuo
+├── 📁 data/
+│   └── 📄 housing_data.csv         # Datos de ejemplo
+├── 📁 docker/
+│   └── 🐳 Dockerfile               # Archivo Docker para construir la imagen de la app
+├── 📁 prometheus/
+│   └── 📝 prometheus.yml           # Configuración para Prometheus
+├── 📁 src/
+│   ├── 📂 __pycache__/             # Archivos compilados de Python
+│   ├── 📝 app.py                   # Archivo principal de la aplicación FastAPI
+│   ├── 📄 model.pkl                # Modelo de regresión entrenado
+│   └── 📝 model.py                 # Código para entrenar el modelo
+├── 📁 tests/
+│   └── 🧪 test_main.py             # Pruebas unitarias de la API
+├── 📝 .gitignore                   # Archivos a ignorar por Git
+├── 🐳 docker-compose.yml           # Archivo de configuración para Docker Compose
+├── 📝 LICENSE                      # Licencia del proyecto
+├── 📝 README_dev.md                # Documentación adicional para desarrollo
+└── 📄 requirements.txt             # Dependencias del proyecto
+
 ```
 
 ## Requisitos Previos
