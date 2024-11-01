@@ -1,144 +1,163 @@
-# Proyecto DevOps con Docker y FastAPI
+```markdown
+# Proyecto de Predicción de Precios de Casas
 
-Este proyecto incluye una aplicación **FastAPI** que realiza predicciones utilizando un modelo entrenado y un contenedor **Postgres** para gestionar la base de datos. Todo está orquestado con **Docker Compose**.
+Este proyecto implementa una API para predecir el precio de una casa en función de su tamaño utilizando un modelo de regresión. La API está construida con FastAPI, y el proyecto incluye un pipeline de CI/CD, monitoreo con Prometheus y visualización de métricas en Grafana. La persistencia de datos se maneja con MongoDB.
 
-## Requisitos previos
+## Estructura del Proyecto
 
-Antes de ejecutar este proyecto, asegúrate de tener instalados los siguientes requisitos:
-
-### 1. **Instalar Docker y Docker Compose**
-   - Docker es necesario para ejecutar la aplicación dentro de contenedores.
-   - Docker Compose es necesario para orquestar los múltiples contenedores (API y base de datos).
-
-   Si no tienes Docker y Docker Compose instalados, puedes hacerlo siguiendo estos pasos:
-
-   - **Instalar Docker**:
-     - [Instrucciones para instalar Docker](https://docs.docker.com/get-docker/)
-   
-   - **Instalar Docker Compose**:
-     - Docker Compose ya viene con Docker Desktop, pero si estás en Linux, puedes instalarlo con:
-   
-     ```bash
-     sudo curl -L "https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-     sudo chmod +x /usr/local/bin/docker-compose
-     ```
-
-### 2. **Clonar el repositorio**
-   
-   Clona este repositorio en tu máquina local:
-
-   ```bash
-   git clone https://github.com/tu_usuario/proyecto-devops.git
-   cd proyecto-devops
-   ```
-
-## Instrucciones para ejecutar el proyecto
-
-### 1. **Generar los datos iniciales**
-
-   Antes de ejecutar la aplicación, es necesario generar el archivo CSV con los datos que utilizará el modelo. Puedes hacerlo ejecutando el siguiente script:
-
-   ```bash
-   python generate_data.py
-   ```
-
-   Esto creará el archivo `housing_data.csv` en la carpeta `data/`.
-
-### 2. **Construir y ejecutar los contenedores con Docker Compose**
-
-   Una vez que tengas Docker y Docker Compose instalados, puedes construir y levantar los contenedores con el siguiente comando:
-
-   ```bash
-   docker-compose up --build
-   ```
-
-   Esto construirá los contenedores (API y base de datos) y los iniciará.
-
-   - La API estará disponible en `http://localhost:8000`.
-   - El contenedor de Postgres estará corriendo en el puerto `5432`.
-
-### 3. **Verificar la API**
-
-   Una vez que los contenedores estén en ejecución, puedes verificar que la API esté funcionando correctamente accediendo a la documentación Swagger en:
-
-   ```bash
-   http://localhost:8000/docs
-   ```
-
-   Desde aquí, puedes probar los endpoints de la API, como el endpoint `/predict`.
-
-### 4. **Apagar los contenedores**
-
-   Cuando hayas terminado, puedes apagar los contenedores con el siguiente comando:
-
-   ```bash
-   docker-compose down
-   ```
-
-## Estructura del proyecto
-
-```bash
-📂 proyecto-devops
-├── 📂 data                      # Carpeta donde se almacenan los datos CSV
-├── 📂 docker                    # Contiene el Dockerfile para la API
-├── 📂 src                       # Contiene el código fuente de la aplicación FastAPI y el modelo
-│   ├── app.py                   # Aplicación FastAPI con un endpoint de predicción
-│   └── model.pkl                # Archivo con el modelo entrenado
-├── .github
-│   └── 📂 workflows             # Contiene los archivos de CI/CD para GitHub Actions
-│       ├── ci.yml               # Pipeline de CI para probar la construcción y la API
-│       └── cd.yml               # Pipeline de CD para subir la imagen Docker a Docker Hub
-├── docker-compose.yml           # Configuración de Docker Compose para levantar la API y la base de datos
-├── Dockerfile                   # Archivo Docker para construir la imagen de la API
-├── generate_data.py             # Script para generar el archivo de datos CSV
-├── model.py                     # Script para entrenar el modelo de regresión
-├── requirements.txt             # Lista de dependencias de Python
-└── README.md                    # Instrucciones del proyecto
+```
+devops/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                # Pipeline de Integración Continua
+│       └── cd.yml                # Pipeline de Despliegue Continuo
+├── data/
+│   └── housing_data.csv          # Datos de ejemplo
+├── docker/
+│   └── Dockerfile                # Archivo Docker para construir la imagen de la app
+├── prometheus/
+│   └── prometheus.yml            # Configuración para Prometheus
+├── src/
+│   ├── __pycache__/
+│   ├── app.py                    # Archivo principal de la aplicación FastAPI
+│   ├── model.pkl                 # Modelo de regresión entrenado
+│   └── model.py                  # Código para entrenar el modelo
+├── tests/
+│   └── test_main.py              # Pruebas unitarias de la API
+├── .gitignore                    # Archivos a ignorar por Git
+├── docker-compose.yml            # Archivo de configuración para Docker Compose
+├── LICENSE                       # Licencia del proyecto
+├── README_dev.md                 # Documentación adicional para desarrollo
+└── requirements.txt              # Dependencias del proyecto
 ```
 
-## Ejecutar pruebas locales de la API
+## Requisitos Previos
 
-Si prefieres ejecutar la API localmente sin Docker, sigue estos pasos:
+- **Docker**: Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+- **GitHub Secrets**: Configura los secretos necesarios en GitHub para que los pipelines CI/CD funcionen correctamente.
 
-### 1. **Instalar dependencias**
+## Instrucciones de Instalación y Ejecución
 
-   Asegúrate de tener un entorno virtual para aislar las dependencias. Luego instala las dependencias desde `requirements.txt`:
+### 1. Clonar el Repositorio
 
-   ```bash
-   python -m venv devops_env
-   source devops_env/bin/activate   # En Windows: devops_env\Scripts\activate
-   pip install -r requirements.txt
-   ```
+Clona el repositorio a tu máquina local:
 
-### 2. **Ejecutar la API**
+```bash
+git clone https://github.com/tu-usuario/devops-project.git
+cd devops-project
+```
 
-   Inicia la aplicación **FastAPI** localmente con el siguiente comando:
+### 2. Configuración del Entorno
 
-   ```bash
-   uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
-   ```
+El proyecto usa Docker Compose para orquestar los servicios. Asegúrate de tener Docker en ejecución y de que los puertos 8000, 27017, 9090 y 3000 estén libres en tu sistema.
 
-   La API estará disponible en `http://localhost:8000`.
+### 3. Archivos de Configuración Importantes
 
-### 3. **Entrenar el modelo (opcional)**
+#### docker-compose.yml
 
-   Si deseas entrenar el modelo nuevamente, puedes ejecutar el script `model.py`:
+Este archivo define y configura los servicios:
 
-   ```bash
-   python model.py
-   ```
+- **app**: La aplicación FastAPI con el modelo de predicción.
+- **mongo**: Base de datos MongoDB para almacenar predicciones.
+- **prometheus**: Herramienta de monitoreo para recolectar métricas.
+- **grafana**: Visualizador de métricas.
 
-   Esto guardará un nuevo archivo `model.pkl` en la carpeta `src/`.
+#### prometheus.yml
 
-## Contribuciones
+Configura Prometheus para recolectar métricas de la API.
 
-Si deseas contribuir a este proyecto, sigue estos pasos:
-1. Crea un **fork** del repositorio.
-2. Crea una **branch** con tus cambios (`git checkout -b feature/nueva-feature`).
-3. Haz **commit** de tus cambios (`git commit -m 'Agrego nueva feature'`).
-4. Haz **push** a la branch (`git push origin feature/nueva-feature`).
-5. Abre un **Pull Request**.
+```yaml
+scrape_configs:
+  - job_name: 'fastapi'
+    scrape_interval: 5s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['app:8000']
+```
 
-## Licencia
+### 4. Construir y Ejecutar los Servicios
 
-Este proyecto está licenciado bajo los términos de la Licencia MIT. Para más detalles, consulta el archivo [LICENSE](./LICENSE).
+Construye y ejecuta los servicios definidos en `docker-compose.yml`:
+
+```bash
+docker-compose up --build -d
+```
+
+Esto ejecutará los siguientes servicios:
+
+- **FastAPI** en `http://localhost:8000`
+- **MongoDB** en el puerto 27017
+- **Prometheus** en `http://localhost:9090`
+- **Grafana** en `http://localhost:3000` (contraseña de administrador configurada en el archivo docker-compose)
+
+### 5. Verificación de la API
+
+Puedes verificar que la API esté en funcionamiento visitando la documentación interactiva generada automáticamente por FastAPI:
+
+```
+http://localhost:8000/docs
+```
+
+### 6. Monitoreo con Prometheus y Grafana
+
+#### Prometheus
+
+Prometheus estará recolectando métricas desde la API. Puedes acceder a la interfaz de Prometheus en:
+
+```
+http://localhost:9090
+```
+
+#### Grafana
+
+Para visualizar las métricas, ingresa a Grafana en:
+
+```
+http://localhost:3000
+```
+
+Inicia sesión (la contraseña está configurada en `docker-compose.yml`) y añade Prometheus como fuente de datos para crear paneles de métricas personalizados.
+
+### 7. Ejecución de Pruebas Unitarias
+
+Las pruebas unitarias están definidas en `tests/test_main.py` y se ejecutan en el contenedor de la aplicación usando `pytest`.
+
+Ejecuta las pruebas con:
+
+```bash
+docker-compose exec app python -m pytest
+```
+
+### Pipelines de CI/CD
+
+Los workflows de CI/CD están definidos en los archivos `.github/workflows/ci.yml` y `.github/workflows/cd.yml`.
+
+#### CI (Integración Continua)
+
+El pipeline de CI (`ci.yml`) se ejecuta en cada push y pull request a la rama `main`. Incluye los siguientes pasos:
+
+1. Descarga el repositorio.
+2. Configura Docker Buildx.
+3. Instala Docker Compose.
+4. Construye y ejecuta los servicios.
+5. Verifica que la API esté funcionando.
+6. Ejecuta pruebas unitarias.
+7. Apaga y elimina los contenedores.
+
+#### CD (Despliegue Continuo)
+
+El pipeline de CD (`cd.yml`) sigue pasos similares al CI pero incluye la configuración de servicios adicionales como MongoDB, Prometheus y Grafana, asegurando que la aplicación se despliegue correctamente en un entorno de producción.
+
+### Descripción Detallada de Archivos Clave
+
+- **`Dockerfile`**: Configura el contenedor de la aplicación, separando la instalación de dependencias y la ejecución del código en diferentes etapas.
+- **`app.py`**: Implementa la lógica de la API FastAPI, incluyendo los endpoints `/predict` para realizar predicciones y `/metrics` para exponer métricas personalizadas a Prometheus.
+- **`test_main.py`**: Contiene pruebas unitarias que verifican el correcto funcionamiento de la API.
+- **`prometheus.yml`**: Configura Prometheus para que recolecte métricas de la aplicación cada 5 segundos.
+
+### Ejemplo de Uso
+
+1. Realiza una predicción enviando una solicitud `POST` a `/predict` con el tamaño de la casa en el cuerpo de la solicitud.
+2. Consulta todas las predicciones almacenadas con una solicitud `GET` a `/predictions`.
+
+---
