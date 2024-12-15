@@ -6,6 +6,7 @@ import os
 from time import time
 from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Counter, Summary
+import pandas as pd
 
 # Inicializar FastAPI
 app = FastAPI()
@@ -47,7 +48,7 @@ async def predict_price(input_data: SizeInput):
     try:
         start_time = time()
         size = input_data.size
-        predicted_price = model.predict([[size]])[0]
+        predicted_price = model.predict(pd.DataFrame([[size]], columns=["size"]))[0]
 
         # Guardar el resultado en la base de datos
         prediction_data = {
