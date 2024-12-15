@@ -82,6 +82,10 @@ async def get_predictions():
         prediction['id'] = str(prediction.get('id'))
     return predictions
 
+@app.get("/")
+async def root():
+    return {"message": "API is running. Use /docs to explore the endpoints."}
+
 # Endpoint de health check
 @app.get('/health')
 async def health_check():
