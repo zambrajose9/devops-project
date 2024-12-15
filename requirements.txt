@@ -7,3 +7,4 @@ prometheus-fastapi-instrumentator
 pymongo
 pytest
 httpx
+python-dotenv
