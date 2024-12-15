@@ -7,6 +7,8 @@ from time import time
 from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Counter, Summary
 import pandas as pd
+import os
+from dotenv import load_dotenv
 
 # Inicializar FastAPI
 app = FastAPI()
@@ -17,8 +19,14 @@ model = joblib.load('src/model.pkl')
 # Instrumentar la aplicación para Prometheus
 Instrumentator().instrument(app).expose(app)
 
+# Cargar variables de entorno
+load_dotenv()
+
 # Conexión a MongoDB
-MONGO_URI = f"mongodb://{os.getenv('MONGO_INITDB_ROOT_USERNAME')}:{os.getenv('MONGO_INITDB_ROOT_PASSWORD')}@mongo:27017/"
+MONGO_URI = os.getenv("MONGO_URI")
+if not MONGO_URI:
+    raise ValueError("MONGO_URI no está configurada")
+
 client = MongoClient(MONGO_URI)
 db = client['mydatabase']
 predictions_collection = db['predictions']
