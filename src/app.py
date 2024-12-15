@@ -86,9 +86,9 @@ async def predict_price(input_data: SizeInput):
 # Endpoint para obtener todas las predicciones
 @app.get("/predictions", response_model=list[PredictionResponse])
 async def get_predictions():
-    predictions = list(predictions_collection.find({}, {'_id': 0}))
+    predictions = list(predictions_collection.find({}))  # No excluyas _id
     for prediction in predictions:
-        prediction['id'] = str(prediction.get('id'))
+        prediction['id'] = str(prediction.pop('_id'))  # Renombra _id a id y conviértelo a string
     return predictions
 
 @app.get("/")
