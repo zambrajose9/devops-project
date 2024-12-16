@@ -31,14 +31,10 @@ jobs:
         docker-compose up --build -d
         docker ps -a  # Verifica si los contenedores están corriendo
 
-    # 5. Verificar conexión a MongoDB con el cliente oficial en Docker
+    # 5. Verificar conexión a MongoDB usando Docker
     - name: Verify MongoDB connection
-      uses: docker://mongo:6.0  # Usa la imagen oficial de MongoDB 6.0
-      with:
-        entrypoint: mongo
-      args: >
-        ${{ secrets.MONGO_URI }}
-        --eval "db.stats()"
+      run: |
+        docker run --rm mongo:6.0 mongo "${{ secrets.MONGO_URI }}" --eval "db.stats()"
 
     # 6. Esperar a que la API esté disponible
     - name: Wait for API to start
