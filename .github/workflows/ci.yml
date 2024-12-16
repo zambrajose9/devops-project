@@ -4,51 +4,52 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+    # Actualizar a la versión más reciente de `actions/checkout`
     - name: Check out the repository
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
+    # Instalar Docker Compose
     - name: Install Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose version
 
+    # Instalar MongoDB cliente
+    - name: Install MongoDB client
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mongodb-clients
+
+    # Verificar la conexión a MongoDB
+    - name: Verify MongoDB connection
+      run: |
+        echo "Verifying MongoDB connection..."
+        mongo "${{ secrets.MONGO_URI }}" --eval "db.stats()"
+
+    # Construir la imagen usando Docker Compose y levantar los contenedores
     - name: Build and Test Docker Compose
       run: |
         docker-compose up --build -d
-        docker ps -a
+        docker ps -a  # Verifica si los contenedores están corriendo
 
-    - name: Test MongoDB Connection
-      run: |
-          echo "Verifying MongoDB connection..."
-          apt-get update && apt-get install -y mongodb-clients
-          mongo "${{ secrets.MONGO_URI }}" --eval "db.runCommand({ping: 1})"
-      
-
+    # Esperar a que la API esté disponible y probarla
     - name: Wait for API to start
       run: |
-        for i in {1..30}; do
-          echo "Waiting for API..."
-          curl -f http://localhost:8080/docs || exit 1
-          sleep 5
-        done || exit 1
-
+        sleep 10  # Esperar 10 segundos para que la API esté lista
+        curl -f http://localhost:8000/docs || exit 1  # Verifica si la API está disponible
+    
+    # Ejecutar las pruebas unitarias con Pytest
     - name: Run unit tests
       run: |
         docker-compose exec app python -m pytest
 
+    # Apagar los servicios al final de la prueba
     - name: Tear down Docker Compose
       run: docker-compose down
-
-    - name: Check Docker Logs (on failure)
-      if: failure()
-      run: |
-        docker-compose ps
-        docker-compose logs app
