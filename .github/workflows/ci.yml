@@ -25,6 +25,12 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
         docker-compose version
 
+    # Cargar variables de entorno
+    - name: Export Environment Variables
+      run: |
+        echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+        echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}" >> .env
+
     # 4. Construir y levantar los servicios usando Docker Compose
     - name: Build and Start Services
       run: |
