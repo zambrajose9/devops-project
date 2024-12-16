@@ -10,46 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Actualizar a la versión más reciente de `actions/checkout`
     - name: Check out the repository
       uses: actions/checkout@v3
 
-    # Instalar Docker Compose
     - name: Install Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
         docker-compose version
 
-    # Instalar MongoDB cliente
     - name: Install MongoDB client
       run: |
+        wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
         sudo apt-get update
-        sudo apt-get install -y mongodb-clients
+        sudo apt-get install -y mongodb-org-shell
 
-    # Verificar la conexión a MongoDB
     - name: Verify MongoDB connection
       run: |
         echo "Verifying MongoDB connection..."
         mongo "${{ secrets.MONGO_URI }}" --eval "db.stats()"
 
-    # Construir la imagen usando Docker Compose y levantar los contenedores
     - name: Build and Test Docker Compose
       run: |
         docker-compose up --build -d
-        docker ps -a  # Verifica si los contenedores están corriendo
+        docker ps -a
 
-    # Esperar a que la API esté disponible y probarla
     - name: Wait for API to start
       run: |
-        sleep 10  # Esperar 10 segundos para que la API esté lista
-        curl -f http://localhost:8000/docs || exit 1  # Verifica si la API está disponible
-    
-    # Ejecutar las pruebas unitarias con Pytest
+        sleep 10
+        curl -f http://localhost:8000/docs || exit 1
+
     - name: Run unit tests
       run: |
         docker-compose exec app python -m pytest
 
-    # Apagar los servicios al final de la prueba
     - name: Tear down Docker Compose
       run: docker-compose down
