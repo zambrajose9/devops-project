@@ -25,6 +25,13 @@ jobs:
         docker-compose up --build -d
         docker ps -a
 
+    - name: Test MongoDB Connection
+      run: |
+          echo "Verifying MongoDB connection..."
+          apt-get update && apt-get install -y mongodb-clients
+          mongo "${{ secrets.MONGO_URI }}" --eval "db.runCommand({ping: 1})"
+      
+
     - name: Wait for API to start
       run: |
         for i in {1..30}; do

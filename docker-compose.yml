@@ -7,7 +7,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: fastapi-app
     ports:
-      - "8080:8000"
+      - "8000:8000"
     environment:
       - ENV=production
       - MONGO_URI=${MONGO_URI}  # Carga la URI de MongoDB Atlas desde el archivo .env
