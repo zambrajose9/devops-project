@@ -34,7 +34,7 @@ jobs:
     # 5. Verificar conexión a MongoDB usando Docker
     - name: Verify MongoDB connection
       run: |
-        docker run --rm mongo:6.0 mongo "${{ secrets.MONGO_URI }}" --eval "db.stats()"
+        docker run --rm bitnami/mongodb:6.0 mongosh "${{ secrets.MONGO_URI }}" --eval "db.stats()"
 
     # 6. Esperar a que la API esté disponible
     - name: Wait for API to start
