@@ -1,29 +1,18 @@
+version: '3.8'
+
 services:
   app:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    container_name: fastapi-mongo
+    container_name: fastapi-app
     ports:
       - "8000:8000"
     environment:
       - ENV=production
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=password
-    links:
-      - mongo
-      - prometheus  # Añadir conexión con Prometheus
-
-  mongo:
-    image: mongo
-    ports:
-      - "27017:27017"
-    container_name: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=password
-    volumes:
-      - mongo-data:/data/db
+      - MONGO_URI=${MONGO_URI}  # Carga la URI de MongoDB Atlas desde el archivo .env
+    depends_on:
+      - prometheus
 
   prometheus:
     image: prom/prometheus
@@ -32,7 +21,7 @@ services:
       - "9090:9090"  # Puerto para acceder al dashboard de Prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus  # Volumen para persistir datos
+      - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
 
@@ -42,11 +31,10 @@ services:
     ports:
       - "3000:3000"  # Puerto para acceder a Grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=yourpassword
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
     volumes:
       - grafana-data:/var/lib/grafana
 
 volumes:
-  mongo-data:
   grafana-data:
-  prometheus-data:  # Volumen persistente para Prometheus
+  prometheus-data:
